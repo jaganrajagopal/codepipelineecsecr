@@ -1,10 +1,12 @@
-﻿version: 0.2
+version: 0.2
 
 phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=$(COMMIT_HASH:=latest)
   build:
     commands:
       - echo Restoring dependencies...
@@ -14,24 +16,18 @@ phases:
       - echo Publishing the application...
       - dotnet publish -c Release -o ./publish
       - echo Building the Docker image...
-      - if [ -z "$IMAGE_TAG" ]; then IMAGE_TAG=latest; fi
-      - if [ -n "$CODEBUILD_RESOLVED_SOURCE_VERSION" ]; then IMAGE_TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"; fi
-      - docker build -t $IMAGE_URI:$IMAGE_TAG .
+     
+      - docker build -t $IMAGE_URI:latest .
       - echo Tagging image with tag "$IMAGE_TAG"...
       - docker tag $IMAGE_URI:latest $IMAGE_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Pushing the Docker image to Amazon ECR...
-      - docker push $ECR_REPO_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push $ECR_REPO_URI:$IMAGE_TAG
 
 artifacts:
   files: imagedefinitions.json
 
-cache:
-  paths:
-    - '/root/.nuget/**/*'
-    - '/root/.dotnet/**/*'
-    - '/root/.local/share/NuGet/**/*'
 
 env:
   variables:

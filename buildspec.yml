@@ -1,0 +1,41 @@
+﻿version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+  build:
+    commands:
+      - echo Restoring dependencies...
+      - dotnet restore
+      - echo Building the application...
+      - dotnet build -c Release
+      - echo Publishing the application...
+      - dotnet publish -c Release -o ./publish
+      - echo Building the Docker image...
+      - if [ -z "$IMAGE_TAG" ]; then IMAGE_TAG=latest; fi
+      - if [ -n "$CODEBUILD_RESOLVED_SOURCE_VERSION" ]; then IMAGE_TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"; fi
+      - docker build -t $IMAGE_URI:$IMAGE_TAG .
+      - echo Tagging image with tag "$IMAGE_TAG"...
+      - docker tag $IMAGE_URI:latest $IMAGE_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Pushing the Docker image to Amazon ECR...
+      - docker push $ECR_REPO_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+
+artifacts:
+  files: imagedefinitions.json
+
+cache:
+  paths:
+    - '/root/.nuget/**/*'
+    - '/root/.dotnet/**/*'
+    - '/root/.local/share/NuGet/**/*'
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: "us-east-1a"
+    IMAGE_REPO_NAME: "dotnetapps"
+    ECR_REPO_URI: "public.ecr.aws/f2y1m1j1/dotnetapps"
+    #ECS_CLUSTER_NAME: "<Your ECS Cluster Name>"

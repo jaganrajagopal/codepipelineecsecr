@@ -4,8 +4,8 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      #- $(aws ecr get-login-password --region $AWS_DEFAULT_REGION) | docker login --username AWS --password-stdin $IMAGE_URI_LOGIN
-      - $(aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f2y1m1j1)
+      - $(aws ecr get-login-password --region $AWS_DEFAULT_REGION) | docker login --username AWS --password-stdin $IMAGE_URI_LOGIN
+      
       #- $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
       #- $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com)
       - echo $IMAGE_URI
@@ -38,5 +38,5 @@ env:
   variables:
     AWS_DEFAULT_REGION: "us-east-1"
     IMAGE_REPO_NAME: "dotnetapps"
-    $IMAGE_URI: "public.ecr.aws/f2y1m1j1/dotnetapps"
+    $IMAGE_URI: "691108211638.dkr.ecr.us-east-1.amazonaws.com/dotnetapps"
     #ECS_CLUSTER_NAME: "<Your ECS Cluster Name>"

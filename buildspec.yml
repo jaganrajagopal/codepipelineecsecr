@@ -5,9 +5,9 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - echo print the environment variable 
-      - echo $IMAGE_URI:$IMAGE_TAG
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=$(COMMIT_HASH:=latest)
+      - echo $ECR_REPO_URI
+      - echo IMAGE_REPO_NAME
+     
   build:
     commands:
       - echo Restoring dependencies...
@@ -34,5 +34,5 @@ env:
   variables:
     AWS_DEFAULT_REGION: "us-east-1"
     IMAGE_REPO_NAME: "dotnetapps"
-    ECR_REPO_URI: "public.ecr.aws/f2y1m1j1/dotnetapps"
+    IMAGE_URI: "public.ecr.aws/f2y1m1j1/dotnetapps"
     #ECS_CLUSTER_NAME: "<Your ECS Cluster Name>"

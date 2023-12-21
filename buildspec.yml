@@ -4,18 +4,20 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - echo print the environment variable 
-      - echo $ECR_REPO_URI
-      - echo IMAGE_REPO_NAME
-     
+      #- $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      #- $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com)
+      - echo $IMAGE_URI
+      - echo $IMAGE_REPO_NAME
+      #- COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      #- IMAGE_TAG=$(COMMIT_HASH:=latest)
   build:
     commands:
       - echo Restoring dependencies...
-      - dotnet restore
+      #- dotnet restore
       - echo Building the application...
-      - dotnet build -c Release
+      #- dotnet build -c Release
       - echo Publishing the application...
-      - dotnet publish -c Release -o ./publish
+      #- dotnet publish -c Release -o ./publish
       - echo Building the Docker image...
      
       - docker build -t $IMAGE_URI:latest .
@@ -24,7 +26,7 @@ phases:
   post_build:
     commands:
       - echo Pushing the Docker image to Amazon ECR...
-      - docker push $ECR_REPO_URI:$IMAGE_TAG
+      - docker push $IMAGE_URI:$IMAGE_TAG
 
 artifacts:
   files: imagedefinitions.json
@@ -32,7 +34,7 @@ artifacts:
 
 env:
   variables:
-    AWS_DEFAULT_REGION: "us-east-1"
+    AWS_DEFAULT_REGION: "us-east-1a"
     IMAGE_REPO_NAME: "dotnetapps"
-    IMAGE_URI: "public.ecr.aws/f2y1m1j1/dotnetapps"
+    $IMAGE_URI: "public.ecr.aws/f2y1m1j1/dotnetapps"
     #ECS_CLUSTER_NAME: "<Your ECS Cluster Name>"

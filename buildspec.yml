@@ -4,6 +4,8 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
+      - echo $DOCKERHUB_USERNAME
+      - echo $DOCKERHUB_PASS
       - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS      
   build:
     commands:

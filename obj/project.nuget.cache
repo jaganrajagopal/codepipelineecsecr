@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "TSpCDX5p4r4y3pavTtC6v46Qm+udIJiHigQQ2aPcbGZZgmgdgw+SdomKianoMMFDIjqvHw+jRcJS4d+43AL+Qg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jagan\\OneDrive - AWSTrainingwithJagan\\Personal\\Institute Training program\\Prominent\\awscodepipeline\\awscodepipeline\\awscodepipeline.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jagan\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.17.0\\microsoft.visualstudio.azure.containers.tools.targets.1.17.0.nupkg.sha512"
+  ],
+  "logs": []
+}

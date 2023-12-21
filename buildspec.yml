@@ -4,7 +4,8 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login-password --region $AWS_DEFAULT_REGION) | docker login --username AWS --password-stdin 691108211638.dkr.ecr.us-east-1.amazonaws.com/dotnetapps
+      - - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
+      #- $(aws ecr get-login-password --region $AWS_DEFAULT_REGION) | docker login --username AWS --password-stdin 691108211638.dkr.ecr.us-east-1.amazonaws.com/dotnetapps
       
       #- $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
       #- $(aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com)
